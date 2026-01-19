@@ -1,0 +1,35 @@
+name: 🐛 Reporte de Bug
+description: Crea un reporte para ayudarnos a mejorar
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por tomarte el tiempo de reportar esto!
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del problema
+      description: ¿Qué sucedió?
+      placeholder: Describe el error de forma clara...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Lista los pasos para llegar al error.
+      placeholder: |
+        1. Ir a la página '...'
+        2. Click en '...'
+        3. Scroll hasta '...'
+        4. Ver error
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Entorno
+      description: SO, Navegador, Versión de Node, etc.
+      placeholder: Windows 11, Chrome 90, Node 18
