@@ -1,0 +1,24 @@
+name: Deploy to Production
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Patrón clave: detecta v1.0.0, v2.1.5, etc.
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir versión final
+        run: npm run build
+      - name: Desplegar a Producción
+        run: ./scripts/deploy.sh production
+      - name: Crear Release en GitHub
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: true # ¡Esto genera el changelog solo!
+          draft: false
+          prerelease: false
+        
