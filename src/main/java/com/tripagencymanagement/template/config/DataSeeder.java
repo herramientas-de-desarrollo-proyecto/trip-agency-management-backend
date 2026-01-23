@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.config;
+package com.tripagencymanagement.template.config;
 
 import java.time.LocalDateTime;
 
@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tripagency.ptc.ptcagencydemo.users.infrastructure.entities.Staff;
-import com.tripagency.ptc.ptcagencydemo.users.infrastructure.entities.User;
-import com.tripagency.ptc.ptcagencydemo.users.infrastructure.enums.Currency;
-import com.tripagency.ptc.ptcagencydemo.users.infrastructure.enums.Roles;
-import com.tripagency.ptc.ptcagencydemo.users.infrastructure.repositories.interfaces.IUserJpaRepository;
+import com.tripagencymanagement.template.users.infrastructure.entities.Staff;
+import com.tripagencymanagement.template.users.infrastructure.entities.User;
+import com.tripagencymanagement.template.users.infrastructure.enums.Currency;
+import com.tripagencymanagement.template.users.infrastructure.enums.Roles;
+import com.tripagencymanagement.template.users.infrastructure.repositories.interfaces.IUserJpaRepository;
 
 @Configuration
 public class DataSeeder {
