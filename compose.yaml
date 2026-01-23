@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: db-ptc-tours
+    shm_size: 256mb
+    environment:
+      - 'POSTGRES_DB=root'
+      - 'POSTGRES_PASSWORD=root'
+      - 'POSTGRES_USER=ptcdemo'
+    volumes:
+      - ../db-ptc-data-backup:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
