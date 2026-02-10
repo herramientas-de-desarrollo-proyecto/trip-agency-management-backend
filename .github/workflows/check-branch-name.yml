@@ -14,22 +14,23 @@ jobs:
           # Obtenemos el nombre de la rama origen del PR
           branch_name="${{ github.head_ref }}"
           
-          # Regex para Git Flow Classic (prefijos) + kebab-case (minúsculas y guiones)
+          # Regex para Git Flow Classic (prefijos) + kebab-case (mayúsculas y minúsculas, guiones)
           # Nota: No incluimos 'main' ni 'develop' aquí porque nadie debería abrir un PR *desde* main.
-          regex="^(feature|bugfix|hotfix|release|support)\/[a-z0-9._-]+$"
+          regex="^(feature|bugfix|hotfix|release|support)\/[a-zA-Z0-9._-]+$"
           
           echo "🔎 Analizando rama: $branch_name"
           
           if [[ ! $branch_name =~ $regex ]]; then
             echo "❌ Error: El nombre de la rama '$branch_name' no es válido."
             echo "-----------------------------------------------------------"
-            echo "Debe cumplir el formato Git Flow Classic en minúsculas:"
+            echo "Debe cumplir el formato Git Flow Classic:"
             echo "  ✅ feature/nueva-funcionalidad"
+            echo "  ✅ feature/UTPHD-72-HU20-creacion-cliente"
             echo "  ✅ bugfix/error-login"
             echo "  ✅ hotfix/parche-critico"
             echo "  ✅ release/v1.0.0"
             echo "-----------------------------------------------------------"
-            echo "Evita mayúsculas, espacios y nombres sin prefijo."
+            echo "Evita espacios y nombres sin prefijo."
             exit 1
           else
             echo "✅ El nombre cumple la convención."
