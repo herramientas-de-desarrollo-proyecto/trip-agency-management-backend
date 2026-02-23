@@ -36,9 +36,14 @@ pipeline {
                     docker.image('postgres:16').withRun(
                         '-e POSTGRES_DB=root ' +
                         '-e POSTGRES_USER=tripagencymanagement ' +
-                        '-e POSTGRES_PASSWORD=root ' +
-                        '-p 5432:5432'
+                        '-e POSTGRES_PASSWORD=root'
                     ) { postgres ->
+                        // Get the container's IP (localhost doesn't work between sibling containers)
+                        def dbHost = sh(
+                            script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${postgres.id}",
+                            returnStdout: true
+                        ).trim()
+
                         // Wait for PostgreSQL to be ready
                         sh """
                             echo 'Waiting for PostgreSQL to be ready...'
@@ -53,7 +58,7 @@ pipeline {
                         """
 
                         sh """
-                            SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/root \
+                            SPRING_DATASOURCE_URL=jdbc:postgresql://${dbHost}:5432/root \
                             SPRING_DATASOURCE_USERNAME=tripagencymanagement \
                             SPRING_DATASOURCE_PASSWORD=root \
                             ./mvnw verify -B -Pcoverage
