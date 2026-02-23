@@ -21,6 +21,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                withCredentials([string(credentialsId: 'github-status-token', variable: 'GH_TOKEN')]) {
+                    sh """
+                        echo "Setting GitHub pending status..."
+                        curl -v -X POST \
+                            -H "Authorization: token \$GH_TOKEN" \
+                            -H "Accept: application/vnd.github+json" \
+                            "https://api.github.com/repos/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD)" \
+                            -d '{"state":"pending","target_url":"${BUILD_URL}","description":"Build in progress","context":"Jenkins"}'
+                    """
+                }
             }
         }
 
