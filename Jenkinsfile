@@ -100,12 +100,6 @@ pipeline {
     post {
         always {
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
-            jacoco(
-                execPattern: 'target/jacoco.exec',
-                classPattern: 'target/classes',
-                sourcePattern: 'src/main/java',
-                exclusionPattern: '**/Q*.class'
-            )
         }
         failure {
             echo "Pipeline FAILED on branch: ${env.BRANCH_NAME ?: env.GIT_BRANCH}"
