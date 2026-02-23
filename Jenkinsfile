@@ -14,6 +14,7 @@ pipeline {
         DB_NAME     = 'root'
         DB_USER     = 'tripagencymanagement'
         DB_PASSWORD = 'root'
+        GITHUB_REPO = 'herramientas-de-desarrollo-proyecto/trip-agency-management-backend'
     }
 
     stages {
@@ -102,11 +103,27 @@ pipeline {
         always {
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
         }
-        failure {
-            echo "Pipeline FAILED on branch: ${env.BRANCH_NAME ?: env.GIT_BRANCH}"
-        }
         success {
-            echo "Pipeline SUCCEEDED on branch: ${env.BRANCH_NAME ?: env.GIT_BRANCH}"
+            withCredentials([string(credentialsId: 'github-status-token', variable: 'GH_TOKEN')]) {
+                sh """
+                    curl -s -X POST \
+                        -H "Authorization: token \$GH_TOKEN" \
+                        -H "Accept: application/vnd.github+json" \
+                        "https://api.github.com/repos/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD)" \
+                        -d '{"state":"success","target_url":"${BUILD_URL}","description":"Build passed","context":"Jenkins"}'
+                """
+            }
+        }
+        failure {
+            withCredentials([string(credentialsId: 'github-status-token', variable: 'GH_TOKEN')]) {
+                sh """
+                    curl -s -X POST \
+                        -H "Authorization: token \$GH_TOKEN" \
+                        -H "Accept: application/vnd.github+json" \
+                        "https://api.github.com/repos/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD)" \
+                        -d '{"state":"failure","target_url":"${BUILD_URL}","description":"Build failed","context":"Jenkins"}'
+                """
+            }
         }
     }
 }
