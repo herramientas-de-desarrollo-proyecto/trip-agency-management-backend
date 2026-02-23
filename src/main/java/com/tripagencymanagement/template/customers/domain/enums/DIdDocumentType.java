@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.domain.enums;
+package com.tripagencymanagement.template.customers.domain.enums;
 
 public enum DIdDocumentType {
     PASSPORT,

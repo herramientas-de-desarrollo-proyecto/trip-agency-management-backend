@@ -1,14 +1,14 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.commands.handlers;
+package com.tripagencymanagement.template.customers.application.commands.handlers;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.UpdateCustomerCommand;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.repositories.ICustomerRepository;
-import com.tripagency.ptc.ptcagencydemo.customers.presentation.dto.UpdateCustomerDto;
-import com.tripagency.ptc.ptcagencydemo.general.utils.exceptions.HtpExceptionUtils;
+import com.tripagencymanagement.template.customers.application.commands.UpdateCustomerCommand;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.domain.repositories.ICustomerRepository;
+import com.tripagencymanagement.template.customers.presentation.dto.UpdateCustomerDto;
+import com.tripagencymanagement.template.general.utils.exceptions.HtpExceptionUtils;
 
 import jakarta.transaction.Transactional;
 

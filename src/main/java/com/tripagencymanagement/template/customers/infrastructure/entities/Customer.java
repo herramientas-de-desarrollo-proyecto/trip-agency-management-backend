@@ -1,9 +1,9 @@
-    package com.tripagency.ptc.ptcagencydemo.customers.infrastructure.entities;
+    package com.tripagencymanagement.template.customers.infrastructure.entities;
 
 import java.time.LocalDate;
 
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.enums.IdDocumentType;
-import com.tripagency.ptc.ptcagencydemo.general.entities.repositoryEntites.BaseAbstractEntity;
+import com.tripagencymanagement.template.customers.infrastructure.enums.IdDocumentType;
+import com.tripagencymanagement.template.general.entities.repositoryEntites.BaseAbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

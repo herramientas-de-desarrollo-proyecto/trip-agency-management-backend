@@ -1,14 +1,14 @@
-package com.tripagency.ptc.ptcagencydemo.customers.infrastructure.repositories.impl;
+package com.tripagencymanagement.template.customers.infrastructure.repositories.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.repositories.ICustomerRepository;
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.entities.Customer;
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.mappers.CustomerLombokMapper;
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.repositories.interfaces.ICustomerJpaRepository;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.domain.repositories.ICustomerRepository;
+import com.tripagencymanagement.template.customers.infrastructure.entities.Customer;
+import com.tripagencymanagement.template.customers.infrastructure.mappers.CustomerLombokMapper;
+import com.tripagencymanagement.template.customers.infrastructure.repositories.interfaces.ICustomerJpaRepository;
 
 @Repository
 public class CustomerRepository implements ICustomerRepository {

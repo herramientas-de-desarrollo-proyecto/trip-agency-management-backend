@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.events;
+package com.tripagencymanagement.template.customers.application.events;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.tripagency.ptc.ptcagencydemo.notifications.application.services.NotificationService;
-import com.tripagency.ptc.ptcagencydemo.notifications.domain.enums.DNotificationScope;
+import com.tripagencymanagement.template.notifications.application.services.NotificationService;
+import com.tripagencymanagement.template.notifications.domain.enums.DNotificationScope;
 
 import lombok.extern.slf4j.Slf4j;
 

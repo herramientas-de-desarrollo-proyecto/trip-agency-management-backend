@@ -14,7 +14,6 @@ import com.tripagencymanagement.template.general.presentation.exception.ErrorBod
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,10 +22,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void handle(

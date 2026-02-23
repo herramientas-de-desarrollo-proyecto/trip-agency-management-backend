@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.commands;
+package com.tripagencymanagement.template.customers.application.commands;
 
 import org.jmolecules.architecture.cqrs.Command;
 

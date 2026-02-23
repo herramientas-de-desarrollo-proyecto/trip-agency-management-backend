@@ -1,10 +1,10 @@
-package com.tripagency.ptc.ptcagencydemo.customers.domain.entities;
+package com.tripagencymanagement.template.customers.domain.entities;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-import com.tripagency.ptc.ptcagencydemo.customers.domain.enums.DIdDocumentType;
-import com.tripagency.ptc.ptcagencydemo.general.entities.domainEntities.BaseAbstractDomainEntity;
+import com.tripagencymanagement.template.customers.domain.enums.DIdDocumentType;
+import com.tripagencymanagement.template.general.entities.domainEntities.BaseAbstractDomainEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

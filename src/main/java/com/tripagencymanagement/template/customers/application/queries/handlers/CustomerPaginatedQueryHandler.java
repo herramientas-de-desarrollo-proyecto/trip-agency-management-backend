@@ -1,14 +1,14 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.queries.handlers;
+package com.tripagencymanagement.template.customers.application.queries.handlers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.tripagency.ptc.ptcagencydemo.customers.application.queries.CustomerPaginatedQuery;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.repositories.ICustomerRepository;
-import com.tripagency.ptc.ptcagencydemo.general.utils.exceptions.HtpExceptionUtils;
+import com.tripagencymanagement.template.customers.application.queries.CustomerPaginatedQuery;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.domain.repositories.ICustomerRepository;
+import com.tripagencymanagement.template.general.utils.exceptions.HtpExceptionUtils;
 
 @Service
 public class CustomerPaginatedQueryHandler {

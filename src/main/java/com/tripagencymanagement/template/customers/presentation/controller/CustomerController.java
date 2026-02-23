@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.presentation.controller;
+package com.tripagencymanagement.template.customers.presentation.controller;
 
 import java.util.List;
 
@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.CreateCustomerCommand;
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.DeactivateCustomerCommand;
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.UpdateCustomerCommand;
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.handlers.CreateCustomerCommandHandler;
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.handlers.DeactivateCustomerCommandHandler;
-import com.tripagency.ptc.ptcagencydemo.customers.application.commands.handlers.UpdateCustomerCommandHandler;
-import com.tripagency.ptc.ptcagencydemo.customers.application.queries.CustomerPaginatedQuery;
-import com.tripagency.ptc.ptcagencydemo.customers.application.queries.GetAllCustomersQuery;
-import com.tripagency.ptc.ptcagencydemo.customers.application.queries.handlers.CustomerPaginatedQueryHandler;
-import com.tripagency.ptc.ptcagencydemo.customers.application.queries.handlers.GetAllCustomersQueryHandler;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
-import com.tripagency.ptc.ptcagencydemo.customers.presentation.dto.CreateCustomerDto;
-import com.tripagency.ptc.ptcagencydemo.customers.presentation.dto.PaginatedCustomerRequestDto;
-import com.tripagency.ptc.ptcagencydemo.customers.presentation.dto.UpdateCustomerDto;
-import com.tripagency.ptc.ptcagencydemo.general.entities.domainEntities.GeneralException;
-import com.tripagency.ptc.ptcagencydemo.general.presentation.controllers.BaseV1Controller;
-import com.tripagency.ptc.ptcagencydemo.general.presentation.exception.ErrorBody;
+import com.tripagencymanagement.template.customers.application.commands.CreateCustomerCommand;
+import com.tripagencymanagement.template.customers.application.commands.DeactivateCustomerCommand;
+import com.tripagencymanagement.template.customers.application.commands.UpdateCustomerCommand;
+import com.tripagencymanagement.template.customers.application.commands.handlers.CreateCustomerCommandHandler;
+import com.tripagencymanagement.template.customers.application.commands.handlers.DeactivateCustomerCommandHandler;
+import com.tripagencymanagement.template.customers.application.commands.handlers.UpdateCustomerCommandHandler;
+import com.tripagencymanagement.template.customers.application.queries.CustomerPaginatedQuery;
+import com.tripagencymanagement.template.customers.application.queries.GetAllCustomersQuery;
+import com.tripagencymanagement.template.customers.application.queries.handlers.CustomerPaginatedQueryHandler;
+import com.tripagencymanagement.template.customers.application.queries.handlers.GetAllCustomersQueryHandler;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.presentation.dto.CreateCustomerDto;
+import com.tripagencymanagement.template.customers.presentation.dto.PaginatedCustomerRequestDto;
+import com.tripagencymanagement.template.customers.presentation.dto.UpdateCustomerDto;
+import com.tripagencymanagement.template.general.entities.domainEntities.GeneralException;
+import com.tripagencymanagement.template.general.presentation.controllers.BaseV1Controller;
+import com.tripagencymanagement.template.general.presentation.exception.ErrorBody;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### SonarQube ###
+.scannerwork/
+*.exec
+
+### Environment variables ###
+.env

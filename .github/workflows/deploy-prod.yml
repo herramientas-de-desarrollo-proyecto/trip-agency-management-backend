@@ -1,24 +1,61 @@
 name: Deploy to Production
+
 on:
   push:
     tags:
-      - 'v*.*.*'  # Patrón clave: detecta v1.0.0, v2.1.5, etc.
+      - 'v*.*.*'
 
 jobs:
   deploy-prod:
+    name: Build & Release
     runs-on: ubuntu-latest
     environment: production
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: root
+          POSTGRES_USER: tripagencymanagement
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd="pg_isready -U tripagencymanagement -d root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Construir versión final
-        run: npm run build
-      - name: Desplegar a Producción
-        run: ./scripts/deploy.sh production
-      - name: Crear Release en GitHub
-        uses: softprops/action-gh-release@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
+
+      - name: Run tests
+        run: ./mvnw verify -B
+        env:
+          SPRING_PROFILES_ACTIVE: ci
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5434/root
+          SPRING_DATASOURCE_USERNAME: tripagencymanagement
+          SPRING_DATASOURCE_PASSWORD: root
+
+      - name: Package application
+        run: ./mvnw package -B -DskipTests
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          generate_release_notes: true # ¡Esto genera el changelog solo!
+          generate_release_notes: true
           draft: false
           prerelease: false
-        
+          files: target/*.jar

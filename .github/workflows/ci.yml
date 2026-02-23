@@ -1,0 +1,130 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  build:
+    name: Build, Test & Analyze
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: root
+          POSTGRES_USER: tripagencymanagement
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd="pg_isready -U tripagencymanagement -d root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
+
+      # --- Compile ---
+      - name: Compile project
+        run: ./mvnw compile -B
+
+      # --- Tests + JaCoCo coverage ---
+      - name: Run tests with coverage
+        run: ./mvnw verify -B -Pcoverage
+        env:
+          SPRING_PROFILES_ACTIVE: ci
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5434/root
+          SPRING_DATASOURCE_USERNAME: tripagencymanagement
+          SPRING_DATASOURCE_PASSWORD: root
+
+      # --- Test reporter (shows results in PR) ---
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: JUnit Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+      # --- Upload JaCoCo HTML report ---
+      - name: Upload JaCoCo coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+          retention-days: 30
+
+      # --- Upload surefire reports ---
+      - name: Upload surefire reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+          retention-days: 30
+
+      # --- Dependency tree ---
+      - name: Generate dependency tree
+        run: ./mvnw dependency:tree -B -DoutputFile=target/dependency-tree.txt
+        if: always()
+
+      - name: Upload dependency tree
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-tree
+          path: target/dependency-tree.txt
+          retention-days: 30
+
+      # --- SonarQube analysis (only if token is configured) ---
+      - name: SonarQube analysis
+        if: env.SONAR_TOKEN != ''
+        run: ./mvnw sonar:sonar -B -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # --- Package JAR ---
+      - name: Package application
+        run: ./mvnw package -B -DskipTests
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-jar
+          path: target/*.jar
+          retention-days: 30
+
+  notify-failure:
+    name: Notify on failure
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+    steps:
+      - name: Report failure
+        run: |
+          echo "## :x: CI Pipeline Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Author:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details." >> $GITHUB_STEP_SUMMARY

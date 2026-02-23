@@ -1,7 +1,7 @@
 @ApplicationModule(
         type = ApplicationModule.Type.OPEN
 )
-package com.tripagency.ptc.ptcagencydemo.customers;
+package com.tripagencymanagement.template.customers;
 
 import org.springframework.modulith.ApplicationModule;
 

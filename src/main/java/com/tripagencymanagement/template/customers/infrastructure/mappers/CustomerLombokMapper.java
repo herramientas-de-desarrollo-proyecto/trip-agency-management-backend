@@ -1,13 +1,13 @@
-package com.tripagency.ptc.ptcagencydemo.customers.infrastructure.mappers;
+package com.tripagencymanagement.template.customers.infrastructure.mappers;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
-import com.tripagency.ptc.ptcagencydemo.customers.domain.enums.DIdDocumentType;
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.entities.Customer;
-import com.tripagency.ptc.ptcagencydemo.customers.infrastructure.enums.IdDocumentType;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.domain.enums.DIdDocumentType;
+import com.tripagencymanagement.template.customers.infrastructure.entities.Customer;
+import com.tripagencymanagement.template.customers.infrastructure.enums.IdDocumentType;
 
 @Component
 public class CustomerLombokMapper implements ICustomerLombokMapper {
