@@ -33,18 +33,19 @@ pipeline {
         stage('Test + Coverage') {
             steps {
                 script {
+                    // Get Jenkins container ID to share its network with PostgreSQL
+                    def jenkinsContainerId = sh(
+                        script: 'hostname',
+                        returnStdout: true
+                    ).trim()
+
                     docker.image('postgres:16').withRun(
                         '-e POSTGRES_DB=root ' +
                         '-e POSTGRES_USER=tripagencymanagement ' +
-                        '-e POSTGRES_PASSWORD=root'
+                        '-e POSTGRES_PASSWORD=root ' +
+                        "--network container:${jenkinsContainerId}"
                     ) { postgres ->
-                        // Get the container's IP (localhost doesn't work between sibling containers)
-                        def dbHost = sh(
-                            script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${postgres.id}",
-                            returnStdout: true
-                        ).trim()
-
-                        // Wait for PostgreSQL to be ready
+                        // Wait for PostgreSQL to be ready (now on localhost since sharing network)
                         sh """
                             echo 'Waiting for PostgreSQL to be ready...'
                             for i in \$(seq 1 30); do
@@ -58,7 +59,7 @@ pipeline {
                         """
 
                         sh """
-                            SPRING_DATASOURCE_URL=jdbc:postgresql://${dbHost}:5432/root \
+                            SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/root \
                             SPRING_DATASOURCE_USERNAME=tripagencymanagement \
                             SPRING_DATASOURCE_PASSWORD=root \
                             ./mvnw verify -B -Pcoverage
