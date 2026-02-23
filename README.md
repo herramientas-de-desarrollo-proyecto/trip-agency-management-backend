@@ -2,7 +2,7 @@
 
 ![CI Pipeline](https://github.com/herramientas-de-desarrollo-proyecto/trip-agency-management-backend/actions/workflows/ci.yml/badge.svg)
 ![Branch Naming](https://github.com/herramientas-de-desarrollo-proyecto/trip-agency-management-backend/actions/workflows/check-branch-name.yml/badge.svg)
-![Jenkins](https://jenkins.gonzalogtz.com/buildStatus/icon?job=trip-agency-management-backend%2Fdevelop)
+![Jenkins Build](https://jenkins.gonzalogtz.com/buildStatus/icon?job=trip-agency-management-backend%2Fdevelop&subject=Jenkins)
 
 ## Tech Stack
 
