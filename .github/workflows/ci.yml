@@ -1,10 +1,8 @@
 name: CI Pipeline
 
+# Disabled — CI/CD now runs on Jenkins (see Jenkinsfile)
 on:
-  push:
-    branches: [ develop, main ]
-  pull_request:
-    branches: [ develop, main ]
+  workflow_dispatch:
 
 jobs:
   build:

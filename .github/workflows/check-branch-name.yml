@@ -16,7 +16,7 @@ jobs:
           
           # Regex para Git Flow Classic (prefijos) + kebab-case (mayúsculas y minúsculas, guiones)
           # Nota: No incluimos 'main' ni 'develop' aquí porque nadie debería abrir un PR *desde* main.
-          regex="^(feature|bugfix|hotfix|release|support)\/[a-zA-Z0-9._-]+$"
+          regex="^(develop|main|feature|bugfix|hotfix|release|support)(\/[a-zA-Z0-9._-]+)?$"
           
           echo "🔎 Analizando rama: $branch_name"
           
