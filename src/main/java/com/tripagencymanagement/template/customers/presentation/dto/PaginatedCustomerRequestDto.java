@@ -1,10 +1,10 @@
-package com.tripagency.ptc.ptcagencydemo.customers.presentation.dto;
+package com.tripagencymanagement.template.customers.presentation.dto;
 
 import org.springframework.data.annotation.TypeAlias;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.tripagency.ptc.ptcagencydemo.general.presentation.dtos.PaginatedRequestDto;
+import com.tripagencymanagement.template.general.presentation.dtos.PaginatedRequestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

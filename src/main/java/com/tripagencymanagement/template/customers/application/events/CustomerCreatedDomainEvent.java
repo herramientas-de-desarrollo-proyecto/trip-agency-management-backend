@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.events;
+package com.tripagencymanagement.template.customers.application.events;
 
 import org.jmolecules.event.annotation.DomainEvent;
 

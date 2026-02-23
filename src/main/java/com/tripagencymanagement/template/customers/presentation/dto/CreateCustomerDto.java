@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.presentation.dto;
+package com.tripagencymanagement.template.customers.presentation.dto;
 
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class CreateCustomerDto {
     private java.time.LocalDate birthDate;
 
     @NotNull(message = "El tipo de documento es obligatorio")
-    private com.tripagency.ptc.ptcagencydemo.customers.domain.enums.DIdDocumentType idDocumentType;
+    private com.tripagencymanagement.template.customers.domain.enums.DIdDocumentType idDocumentType;
 
     @NotBlank(message = "El número de documento es obligatorio")
     @Size(max = 50, message = "El número de documento no puede exceder 50 caracteres")

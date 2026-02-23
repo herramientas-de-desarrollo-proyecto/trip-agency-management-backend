@@ -1,8 +1,8 @@
-package com.tripagency.ptc.ptcagencydemo.customers.presentation.dto;
+package com.tripagencymanagement.template.customers.presentation.dto;
 
 import java.time.LocalDate;
 
-import com.tripagency.ptc.ptcagencydemo.customers.domain.enums.DIdDocumentType;
+import com.tripagencymanagement.template.customers.domain.enums.DIdDocumentType;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

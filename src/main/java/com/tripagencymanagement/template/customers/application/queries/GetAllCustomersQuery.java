@@ -1,4 +1,4 @@
-package com.tripagency.ptc.ptcagencydemo.customers.application.queries;
+package com.tripagencymanagement.template.customers.application.queries;
 
 import org.jmolecules.architecture.cqrs.QueryModel;
 

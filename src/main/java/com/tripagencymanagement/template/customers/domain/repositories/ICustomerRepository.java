@@ -1,11 +1,11 @@
-package com.tripagency.ptc.ptcagencydemo.customers.domain.repositories;
+package com.tripagencymanagement.template.customers.domain.repositories;
 
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.tripagency.ptc.ptcagencydemo.customers.domain.entities.DCustomer;
+import com.tripagencymanagement.template.customers.domain.entities.DCustomer;
 
 public interface ICustomerRepository {
     DCustomer save(DCustomer customer);
