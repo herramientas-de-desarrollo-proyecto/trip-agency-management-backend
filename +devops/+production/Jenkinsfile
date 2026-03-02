@@ -33,6 +33,14 @@ pipeline {
             }
         }
 
+        stage('Prepare Vault Password') {
+            steps {
+                withCredentials([string(credentialsId: 'ansible-vault-ptc-key', variable: 'VAULT_PASS')]) {
+                    sh 'printf "%s" "$VAULT_PASS" > vault-pass.txt'
+                }
+            }
+        }
+
         stage('Build & Push / Setup Target') {
             parallel {
                 stage('Build & Push Image') {
@@ -57,15 +65,12 @@ pipeline {
                         withCredentials([sshUserPrivateKey(
                             credentialsId: 'ssh-id_vps',
                             keyFileVariable: 'SSH_KEY'
-                        ), file(
-                            credentialsId: 'ansible-vault-ptc-key',
-                            variable: 'VAULT_PASS_FILE'
                         )]) {
                             sh """
                                 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
                                     -i inventory.yml \
                                     --private-key=\$SSH_KEY \
-                                    --vault-password-file=\$VAULT_PASS_FILE \
+                                    --vault-password-file=vault-pass.txt \
                                     +devops/ansible/setup_target.yml
                             """
                         }
@@ -79,15 +84,12 @@ pipeline {
                 withCredentials([sshUserPrivateKey(
                     credentialsId: 'ssh-id_vps',
                     keyFileVariable: 'SSH_KEY'
-                ), file(
-                    credentialsId: 'ansible-vault-ptc-key',
-                    variable: 'VAULT_PASS_FILE'
                 )]) {
                     sh """
                         ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
                             -i inventory.yml \
                             --private-key=\$SSH_KEY \
-                            --vault-password-file=\$VAULT_PASS_FILE \
+                            --vault-password-file=vault-pass.txt \
                             -e "registry_image=${IMAGE_TAG}" \
                             -e "project_service=${PROJECT_SERVICE}" \
                             -e "version=${VERSION}" \
@@ -102,15 +104,12 @@ pipeline {
                 withCredentials([sshUserPrivateKey(
                     credentialsId: 'ssh-id_vps',
                     keyFileVariable: 'SSH_KEY'
-                ), file(
-                    credentialsId: 'ansible-vault-ptc-key',
-                    variable: 'VAULT_PASS_FILE'
                 )]) {
                     sh """
                         ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
                             -i inventory.yml \
                             --private-key=\$SSH_KEY \
-                            --vault-password-file=\$VAULT_PASS_FILE \
+                            --vault-password-file=vault-pass.txt \
                             -e "project_service=${PROJECT_SERVICE}" \
                             +devops/ansible/start_service.yml
                     """
@@ -121,6 +120,7 @@ pipeline {
 
     post {
         always {
+            sh 'rm -f vault-pass.txt || true'
             sh 'docker logout || true'
             cleanWs()
         }
