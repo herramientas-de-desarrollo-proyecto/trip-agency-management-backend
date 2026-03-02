@@ -211,13 +211,7 @@ sudo visudo
 gonzalo ALL=(ALL) NOPASSWD: ALL
 ```
 
-**4. Configurar DNS en Cloudflare:**
-
-Crear registros A apuntando a la IP publica del VPS:
-- `ptc-api.gonzalogtz.com` → `<IP_VPS>`
-- `ptc-app.gonzalogtz.com` → `<IP_VPS>`
-
-**5. Configurar Nginx Proxy Manager (puerto 81):**
+**4. Configurar Nginx Proxy Manager (puerto 81):**
 
 Para cada subdominio:
 1. Acceder a `http://<IP_VPS>:81`
