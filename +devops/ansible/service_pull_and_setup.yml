@@ -24,6 +24,15 @@
         group: "{{ ansible_user }}"
         mode: "0644"
 
+    - name: Write docker-compose .env file
+      ansible.builtin.copy:
+        content: |
+          POSTGRES_PASSWORD={{ vault_database_password }}
+        dest: "{{ compose_dir }}/.env"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
+
     - name: Write backend environment file
       ansible.builtin.copy:
         content: |
