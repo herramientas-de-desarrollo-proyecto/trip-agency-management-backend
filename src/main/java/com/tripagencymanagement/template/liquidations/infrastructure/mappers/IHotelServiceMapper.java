@@ -24,6 +24,15 @@ public interface IHotelServiceMapper {
     }
     
     DHotelService toDomain(HotelService infrastructure);
+
+    @org.mapstruct.AfterMapping
+    default void filterInactiveHotelBookings(@org.mapstruct.MappingTarget DHotelService target) {
+        if (target.getHotelBookings() != null) {
+            target.setHotelBookings(target.getHotelBookings().stream()
+                .filter(booking -> Boolean.TRUE.equals(booking.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+    }
     
     List<HotelService> toInfrastructureList(List<DHotelService> domainList);
     List<DHotelService> toDomainList(List<HotelService> infrastructureList);

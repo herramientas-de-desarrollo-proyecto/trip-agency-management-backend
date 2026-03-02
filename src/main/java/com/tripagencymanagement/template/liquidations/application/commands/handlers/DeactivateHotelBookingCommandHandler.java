@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.tripagencymanagement.template.general.utils.exceptions.HtpExceptionUtils;
 import com.tripagencymanagement.template.liquidations.application.commands.DeactivateHotelBookingCommand;
+import com.tripagencymanagement.template.liquidations.application.services.LiquidationTotalsService;
 import com.tripagencymanagement.template.liquidations.infrastructure.entities.HotelBooking;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.IHotelBookingJpaRepository;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.ILiquidationJpaRepository;
@@ -14,11 +15,14 @@ import jakarta.transaction.Transactional;
 public class DeactivateHotelBookingCommandHandler {
     private final IHotelBookingJpaRepository hotelBookingJpaRepository;
     private final ILiquidationJpaRepository liquidationJpaRepository;
+    private final LiquidationTotalsService liquidationTotalsService;
 
     public DeactivateHotelBookingCommandHandler(IHotelBookingJpaRepository hotelBookingJpaRepository,
-                                                 ILiquidationJpaRepository liquidationJpaRepository) {
+                                                 ILiquidationJpaRepository liquidationJpaRepository,
+                                                 LiquidationTotalsService liquidationTotalsService) {
         this.hotelBookingJpaRepository = hotelBookingJpaRepository;
         this.liquidationJpaRepository = liquidationJpaRepository;
+        this.liquidationTotalsService = liquidationTotalsService;
     }
 
     @Transactional
@@ -33,7 +37,11 @@ public class DeactivateHotelBookingCommandHandler {
                 .orElseThrow(() -> new IllegalArgumentException("No existe una reserva de hotel con el ID: " + command.hotelBookingId()));
 
             existingBooking.setIsActive(false);
-            return hotelBookingJpaRepository.save(existingBooking);
+            HotelBooking saved = hotelBookingJpaRepository.save(existingBooking);
+
+            liquidationTotalsService.recalculateAndSaveTotals(command.liquidationId());
+
+            return saved;
         } catch (Exception e) {
             throw HtpExceptionUtils.processHttpException(e);
         }

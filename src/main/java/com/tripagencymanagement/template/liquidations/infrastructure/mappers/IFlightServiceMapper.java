@@ -24,6 +24,15 @@ public interface IFlightServiceMapper {
     }
     
     DFlightService toDomain(FlightService infrastructure);
+
+    @org.mapstruct.AfterMapping
+    default void filterInactiveFlightBookings(@org.mapstruct.MappingTarget DFlightService target) {
+        if (target.getFlightBookings() != null) {
+            target.setFlightBookings(target.getFlightBookings().stream()
+                .filter(booking -> Boolean.TRUE.equals(booking.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+    }
     
     List<FlightService> toInfrastructureList(List<DFlightService> domainList);
     List<DFlightService> toDomainList(List<FlightService> infrastructureList);

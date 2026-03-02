@@ -43,6 +43,7 @@ public class DHotelService extends DBaseAbstractService {
         }
         
         return hotelBookings.stream()
+            .filter(booking -> Boolean.TRUE.equals(booking.getIsActive()))
             .map(DHotelBooking::calculateTotalPrice)
             .reduce(0f, Float::sum);
     }

@@ -24,6 +24,15 @@ public interface ITourServiceMapper {
     }
     
     DTourService toDomain(TourService infrastructure);
+
+    @org.mapstruct.AfterMapping
+    default void filterInactiveTours(@org.mapstruct.MappingTarget DTourService target) {
+        if (target.getTours() != null) {
+            target.setTours(target.getTours().stream()
+                .filter(tour -> Boolean.TRUE.equals(tour.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+    }
     
     List<TourService> toInfrastructureList(List<DTourService> domainList);
     List<DTourService> toDomainList(List<TourService> infrastructureList);

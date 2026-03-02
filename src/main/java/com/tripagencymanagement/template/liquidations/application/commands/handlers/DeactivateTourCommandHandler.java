@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.tripagencymanagement.template.general.utils.exceptions.HtpExceptionUtils;
 import com.tripagencymanagement.template.liquidations.application.commands.DeactivateTourCommand;
+import com.tripagencymanagement.template.liquidations.application.services.LiquidationTotalsService;
 import com.tripagencymanagement.template.liquidations.infrastructure.entities.Tour;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.ILiquidationJpaRepository;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.ITourJpaRepository;
@@ -14,11 +15,14 @@ import jakarta.transaction.Transactional;
 public class DeactivateTourCommandHandler {
     private final ITourJpaRepository tourJpaRepository;
     private final ILiquidationJpaRepository liquidationJpaRepository;
+    private final LiquidationTotalsService liquidationTotalsService;
 
     public DeactivateTourCommandHandler(ITourJpaRepository tourJpaRepository,
-                                        ILiquidationJpaRepository liquidationJpaRepository) {
+                                        ILiquidationJpaRepository liquidationJpaRepository,
+                                        LiquidationTotalsService liquidationTotalsService) {
         this.tourJpaRepository = tourJpaRepository;
         this.liquidationJpaRepository = liquidationJpaRepository;
+        this.liquidationTotalsService = liquidationTotalsService;
     }
 
     @Transactional
@@ -33,7 +37,11 @@ public class DeactivateTourCommandHandler {
                 .orElseThrow(() -> new IllegalArgumentException("No existe un tour con el ID: " + command.tourId()));
 
             existingTour.setIsActive(false);
-            return tourJpaRepository.save(existingTour);
+            Tour saved = tourJpaRepository.save(existingTour);
+
+            liquidationTotalsService.recalculateAndSaveTotals(command.liquidationId());
+
+            return saved;
         } catch (Exception e) {
             throw HtpExceptionUtils.processHttpException(e);
         }

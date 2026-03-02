@@ -44,6 +44,7 @@ public class DTourService extends DBaseAbstractService {
         }
         
         return tours.stream()
+            .filter(tour -> Boolean.TRUE.equals(tour.getIsActive()))
             .map(DTour::getPrice)
             .reduce(0f, Float::sum);
     }

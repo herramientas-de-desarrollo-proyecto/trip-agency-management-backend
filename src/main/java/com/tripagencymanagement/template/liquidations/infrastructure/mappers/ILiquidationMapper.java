@@ -55,6 +55,25 @@ public interface ILiquidationMapper {
     @Mapping(target = "staffOnCharge", ignore = true)
     DLiquidation toDomain(Liquidation infrastructure);
 
+    @org.mapstruct.AfterMapping
+    default void filterInactiveChildren(@org.mapstruct.MappingTarget DLiquidation target) {
+        if (target.getPayments() != null) {
+            target.setPayments(target.getPayments().stream()
+                .filter(p -> Boolean.TRUE.equals(p.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+        if (target.getAdditionalServices() != null) {
+            target.setAdditionalServices(target.getAdditionalServices().stream()
+                .filter(s -> Boolean.TRUE.equals(s.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+        if (target.getIncidencies() != null) {
+            target.setIncidencies(target.getIncidencies().stream()
+                .filter(i -> Boolean.TRUE.equals(i.getIsActive()))
+                .collect(java.util.stream.Collectors.toList()));
+        }
+    }
+
     List<Liquidation> toInfrastructureList(List<DLiquidation> domainList);
 
     List<DLiquidation> toDomainList(List<Liquidation> infrastructureList);

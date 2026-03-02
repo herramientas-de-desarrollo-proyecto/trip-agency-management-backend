@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.tripagencymanagement.template.general.utils.exceptions.HtpExceptionUtils;
 import com.tripagencymanagement.template.liquidations.application.commands.DeactivatePaymentCommand;
+import com.tripagencymanagement.template.liquidations.application.services.LiquidationTotalsService;
 import com.tripagencymanagement.template.liquidations.infrastructure.entities.Payment;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.ILiquidationJpaRepository;
 import com.tripagencymanagement.template.liquidations.infrastructure.repositories.interfaces.IPaymentJpaRepository;
@@ -14,11 +15,14 @@ import jakarta.transaction.Transactional;
 public class DeactivatePaymentCommandHandler {
     private final IPaymentJpaRepository paymentJpaRepository;
     private final ILiquidationJpaRepository liquidationJpaRepository;
+    private final LiquidationTotalsService liquidationTotalsService;
 
     public DeactivatePaymentCommandHandler(IPaymentJpaRepository paymentJpaRepository,
-                                           ILiquidationJpaRepository liquidationJpaRepository) {
+                                           ILiquidationJpaRepository liquidationJpaRepository,
+                                           LiquidationTotalsService liquidationTotalsService) {
         this.paymentJpaRepository = paymentJpaRepository;
         this.liquidationJpaRepository = liquidationJpaRepository;
+        this.liquidationTotalsService = liquidationTotalsService;
     }
 
     @Transactional
@@ -33,7 +37,11 @@ public class DeactivatePaymentCommandHandler {
                 .orElseThrow(() -> new IllegalArgumentException("No existe un pago con el ID: " + command.paymentId()));
 
             existingPayment.setIsActive(false);
-            return paymentJpaRepository.save(existingPayment);
+            Payment saved = paymentJpaRepository.save(existingPayment);
+
+            liquidationTotalsService.recalculateAndSaveTotals(command.liquidationId());
+
+            return saved;
         } catch (Exception e) {
             throw HtpExceptionUtils.processHttpException(e);
         }

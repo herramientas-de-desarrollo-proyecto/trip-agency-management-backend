@@ -44,6 +44,7 @@ public class DFlightService extends DBaseAbstractService {
         }
         
         return flightBookings.stream()
+            .filter(booking -> Boolean.TRUE.equals(booking.getIsActive()))
             .map(DFlightBooking::getTotalPrice)
             .reduce(0f, Float::sum);
     }

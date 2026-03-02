@@ -193,6 +193,7 @@ public class DLiquidation extends BaseAbstractDomainEntity {
 
         if (additionalServices != null) {
             total += additionalServices.stream()
+                    .filter(s -> Boolean.TRUE.equals(s.getIsActive()))
                     .filter(DBaseAbstractService::isPEN)
                     .map(DAdditionalServices::calculateTotal)
                     .reduce(0f, Float::sum);
@@ -230,6 +231,7 @@ public class DLiquidation extends BaseAbstractDomainEntity {
 
         if (additionalServices != null) {
             total += additionalServices.stream()
+                    .filter(s -> Boolean.TRUE.equals(s.getIsActive()))
                     .filter(DBaseAbstractService::isUSD)
                     .map(DAdditionalServices::calculateTotal)
                     .reduce(0f, Float::sum);
@@ -267,6 +269,7 @@ public class DLiquidation extends BaseAbstractDomainEntity {
 
         if (additionalServices != null) {
             total += additionalServices.stream()
+                    .filter(s -> Boolean.TRUE.equals(s.getIsActive()))
                     .filter(DBaseAbstractService::isPEN)
                     .map(DAdditionalServices::calculateCommission)
                     .reduce(0f, Float::sum);
@@ -304,6 +307,7 @@ public class DLiquidation extends BaseAbstractDomainEntity {
 
         if (additionalServices != null) {
             total += additionalServices.stream()
+                    .filter(s -> Boolean.TRUE.equals(s.getIsActive()))
                     .filter(DBaseAbstractService::isUSD)
                     .map(DAdditionalServices::calculateCommission)
                     .reduce(0f, Float::sum);
