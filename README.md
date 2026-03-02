@@ -180,6 +180,52 @@ GitHub Push ──> Jenkins (VPS)
 | **Jenkins** | Contenedor Docker en el VPS |
 | **SonarQube** | `https://sonar.gonzalogtz.com` |
 
+### Configuracion inicial del VPS (una sola vez)
+
+**1. Instalar Ansible dentro del contenedor de Jenkins:**
+```bash
+sudo docker exec -u root jenkins bash -c "apt-get update && apt-get install -y ansible"
+```
+
+**2. Instalar Docker Compose plugin en el VPS:**
+```bash
+# Agregar repositorio oficial de Docker
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+  | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update && sudo apt install -y docker-compose-plugin
+
+# Verificar
+docker compose version
+```
+
+**3. Configurar sudo sin password para Ansible:**
+```bash
+sudo visudo
+# Agregar al final:
+gonzalo ALL=(ALL) NOPASSWD: ALL
+```
+
+**4. Configurar DNS en Cloudflare:**
+
+Crear registros A apuntando a la IP publica del VPS:
+- `ptc-api.gonzalogtz.com` → `<IP_VPS>`
+- `ptc-app.gonzalogtz.com` → `<IP_VPS>`
+
+**5. Configurar Nginx Proxy Manager (puerto 81):**
+
+Para cada subdominio:
+1. Acceder a `http://<IP_VPS>:81`
+2. **Proxy Hosts** → **Add Proxy Host**
+3. **Domain:** `ptc-api.gonzalogtz.com`, **Forward IP:** `172.19.0.1`, **Port:** `3091`
+4. Pestana **SSL** → Request new certificate → Force SSL
+5. Repetir para frontend: `ptc-app.gonzalogtz.com` → puerto `3090`
+
 ### Puertos de servicios
 
 | Servicio | Puerto Host | Puerto Container |
