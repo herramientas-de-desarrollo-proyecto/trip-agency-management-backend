@@ -1,2 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+*.yml text eol=lf
+Jenkinsfile text eol=lf
+Dockerfile text eol=lf
