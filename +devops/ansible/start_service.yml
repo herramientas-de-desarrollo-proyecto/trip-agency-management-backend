@@ -1,0 +1,39 @@
+---
+- name: Deploy service with docker compose
+  hosts: all
+  become: true
+
+  vars:
+    compose_dir: /opt/docker/compose/projects/ptc-production
+
+  tasks:
+    - name: Copy docker-compose template for service
+      ansible.builtin.template:
+        src: "../+production/docker-compose.{{ project_service }}.yml.j2"
+        dest: "{{ compose_dir }}/docker-compose.{{ project_service }}.yml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+
+    - name: Read service version
+      ansible.builtin.slurp:
+        src: "{{ compose_dir }}/.version.{{ project_service }}"
+      register: service_version_file
+
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        service_version: "{{ service_version_file.content | b64decode | trim }}"
+
+    - name: Start services with docker compose
+      ansible.builtin.shell: |
+        cd {{ compose_dir }}
+        export PTC_BACKEND_REGISTRY_URL=gonzagtz/ptc-backend
+        export PTC_BACKEND_VERSION={{ service_version }}
+        export PTC_FRONTEND_REGISTRY_URL=gonzagtz/ptc-frontend
+        export PTC_FRONTEND_VERSION={{ service_version }}
+        docker compose \
+          -f docker-compose.base.yml \
+          -f docker-compose.{{ project_service }}.yml \
+          up -d --remove-orphans
+      args:
+        chdir: "{{ compose_dir }}"

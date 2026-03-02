@@ -1,0 +1,16 @@
+---
+- name: Setup target directory
+  hosts: all
+  become: true
+
+  vars:
+    compose_dir: /opt/docker/compose/projects/ptc-production
+
+  tasks:
+    - name: Ensure project directory exists
+      ansible.builtin.file:
+        path: "{{ compose_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"

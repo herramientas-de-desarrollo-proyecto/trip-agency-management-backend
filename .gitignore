@@ -38,3 +38,4 @@ build/
 
 ### Environment variables ###
 .env
+vault-password.txt

@@ -1,0 +1,20 @@
+services:
+  ptc-production-backend:
+    image: ${PTC_BACKEND_REGISTRY_URL}:${PTC_BACKEND_VERSION}
+    container_name: ptc-production-backend
+    restart: unless-stopped
+    depends_on:
+      ptc-production-postgres:
+        condition: service_healthy
+    env_file:
+      - .env.backend
+    ports:
+      - "3091:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/ptc/api/api-docs"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    networks:
+      - ptc-production-network

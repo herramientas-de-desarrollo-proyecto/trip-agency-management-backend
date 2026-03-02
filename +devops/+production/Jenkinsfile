@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_NAME    = 'ptc'
+        PROJECT_SERVICE = 'backend'
+        REGISTRY_USER   = 'gonzagtz'
+        REMOTE_USER     = 'gonzalo'
+        REMOTE_IP       = 'gonzalogtz.com'
+        COMPOSE_DIR     = "/opt/docker/compose/projects/${PROJECT_NAME}-production"
+        IMAGE_NAME      = "${REGISTRY_USER}/${PROJECT_NAME}-${PROJECT_SERVICE}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    env.VERSION = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    env.IMAGE_TAG = "${IMAGE_NAME}:${VERSION}"
+                    env.IMAGE_LATEST = "${IMAGE_NAME}:latest"
+                }
+            }
+        }
+
+        stage('Prepare Inventory') {
+            steps {
+                sh """
+                    sed -e 's/REMOTE_IP/${REMOTE_IP}/g' \
+                        -e 's/REMOTE_USER/${REMOTE_USER}/g' \
+                        +devops/+production/inventory.yml > inventory.yml
+                """
+            }
+        }
+
+        stage('Build & Push / Setup Target') {
+            parallel {
+                stage('Build & Push Image') {
+                    steps {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'dockerhub-credentials',
+                            usernameVariable: 'DOCKER_USER',
+                            passwordVariable: 'DOCKER_PASS'
+                        )]) {
+                            sh """
+                                echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
+                                docker build -t ${IMAGE_TAG} -t ${IMAGE_LATEST} -f +devops/docker/Dockerfile .
+                                docker push ${IMAGE_TAG}
+                                docker push ${IMAGE_LATEST}
+                                docker logout
+                            """
+                        }
+                    }
+                }
+                stage('Setup Target') {
+                    steps {
+                        withCredentials([sshUserPrivateKey(
+                            credentialsId: 'ssh-id_vps',
+                            keyFileVariable: 'SSH_KEY'
+                        ), file(
+                            credentialsId: 'ansible-vault-ptc-key',
+                            variable: 'VAULT_PASS_FILE'
+                        )]) {
+                            sh """
+                                ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+                                    -i inventory.yml \
+                                    --private-key=\$SSH_KEY \
+                                    --vault-password-file=\$VAULT_PASS_FILE \
+                                    +devops/ansible/setup_target.yml
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Pull Image on Target') {
+            steps {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'ssh-id_vps',
+                    keyFileVariable: 'SSH_KEY'
+                ), file(
+                    credentialsId: 'ansible-vault-ptc-key',
+                    variable: 'VAULT_PASS_FILE'
+                )]) {
+                    sh """
+                        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+                            -i inventory.yml \
+                            --private-key=\$SSH_KEY \
+                            --vault-password-file=\$VAULT_PASS_FILE \
+                            -e "registry_image=${IMAGE_TAG}" \
+                            -e "project_service=${PROJECT_SERVICE}" \
+                            -e "version=${VERSION}" \
+                            +devops/ansible/service_pull_and_setup.yml
+                    """
+                }
+            }
+        }
+
+        stage('Up Services') {
+            steps {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'ssh-id_vps',
+                    keyFileVariable: 'SSH_KEY'
+                ), file(
+                    credentialsId: 'ansible-vault-ptc-key',
+                    variable: 'VAULT_PASS_FILE'
+                )]) {
+                    sh """
+                        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+                            -i inventory.yml \
+                            --private-key=\$SSH_KEY \
+                            --vault-password-file=\$VAULT_PASS_FILE \
+                            -e "project_service=${PROJECT_SERVICE}" \
+                            +devops/ansible/start_service.yml
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout || true'
+            cleanWs()
+        }
+    }
+}
