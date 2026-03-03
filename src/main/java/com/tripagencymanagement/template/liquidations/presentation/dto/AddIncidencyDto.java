@@ -2,6 +2,8 @@ package com.tripagencymanagement.template.liquidations.presentation.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -20,6 +22,7 @@ public class AddIncidencyDto {
     @PositiveOrZero(message = "El monto no puede ser negativo")
     private Float amount;
     
+    @JsonProperty("incidency_date")
     @NotNull(message = "La fecha de incidencia es obligatoria")
     private LocalDateTime incidencyDate;
 }

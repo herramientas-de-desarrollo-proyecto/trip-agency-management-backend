@@ -2,6 +2,7 @@ package com.tripagencymanagement.template.liquidations.presentation.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -16,20 +17,24 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class HotelBookingDto {
     
+    @JsonProperty("check_in")
     @NotNull(message = "La fecha de check-in es obligatoria")
     private LocalDateTime checkIn;
 
+    @JsonProperty("check_out")
     @NotNull(message = "La fecha de check-out es obligatoria")
     private LocalDateTime checkOut;
-    
+
     @NotBlank(message = "El nombre del hotel es obligatorio")
     private String hotel;
 
     @NotBlank(message = "La habitación es obligatoria")
     private String room;
-    
+
+    @JsonProperty("room_description")
     private String roomDescription;
-    
+
+    @JsonProperty("price_by_night")
     @NotNull(message = "El precio por noche es obligatorio")
     @Positive(message = "El precio por noche debe ser positivo")
     private Float priceByNight;

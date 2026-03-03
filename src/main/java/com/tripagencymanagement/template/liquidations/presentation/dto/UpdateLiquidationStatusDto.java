@@ -1,5 +1,6 @@
 package com.tripagencymanagement.template.liquidations.presentation.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -14,6 +15,7 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UpdateLiquidationStatusDto {
     
+    @JsonProperty("target_status")
     @NotNull(message = "El estado objetivo es obligatorio")
     private String targetStatus;
 }

@@ -1,5 +1,6 @@
 package com.tripagencymanagement.template.liquidations.presentation.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -17,6 +18,7 @@ import lombok.Setter;
 @Schema(description = "DTO para agregar un nuevo pago a una liquidación")
 public class AddPaymentDto {
     
+    @JsonProperty("payment_method")
     @NotNull(message = "El método de pago es obligatorio")
     @Schema(description = "Método de pago", example = "DEBIT", requiredMode = Schema.RequiredMode.REQUIRED)
     private String paymentMethod;
@@ -29,6 +31,7 @@ public class AddPaymentDto {
     @Schema(description = "Moneda del pago", example = "PEN", defaultValue = "PEN")
     private String currency = "PEN";
 
+    @JsonProperty("evidence_url")
     @Schema(description = "URL de la evidencia del pago (imagen o PDF)", example = "https://example.com/evidence.jpg")
     private String evidenceUrl;
 }
