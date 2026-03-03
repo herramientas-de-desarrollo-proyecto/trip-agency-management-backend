@@ -2,6 +2,7 @@ package com.tripagencymanagement.template.liquidations.presentation.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -18,9 +19,11 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UpdateTourDto {
     
+    @JsonProperty("start_date")
     @NotNull(message = "La fecha de inicio es obligatoria")
     private LocalDateTime startDate;
 
+    @JsonProperty("end_date")
     @NotNull(message = "La fecha de fin es obligatoria")
     private LocalDateTime endDate;
     
